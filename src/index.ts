@@ -19,8 +19,11 @@ app.use('/api', geocodingRouter);
 
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`🔥 Can I Burn API server running on port ${PORT}`);
-});
+// Only start the server if not in test mode
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log(`🔥 Can I Burn API server running on port ${PORT}`);
+  });
+}
 
 export default app;

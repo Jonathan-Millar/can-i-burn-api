@@ -20,7 +20,7 @@ export function errorHandler(
   });
 
   const status = error.status || 500;
-  const message = status === 500 ? 'Internal server error' : error.message;
+  const message = error.message || 'Internal server error';
 
   res.status(status).json({
     error: 'Request failed',
