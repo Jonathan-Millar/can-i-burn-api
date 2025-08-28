@@ -338,6 +338,51 @@ Deno.test('Health Endpoint', async () => {
 
 ## 🚀 Deployment
 
+### Vercel (Recommended)
+
+This API is configured for deployment on Vercel using the Deno runtime:
+
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy
+vercel
+```
+
+**Vercel Configuration:**
+- Uses `vercel-deno-runtime@3.1.0` for Deno support
+- No build step required
+- Serverless functions in `/api/index.ts`
+- Environment variables supported
+
+### Deno Deploy
+
+Alternative deployment using Deno's native platform:
+
+```bash
+# Install Deno Deploy CLI
+deno install -A --global https://deno.land/x/deploy/deployctl.ts
+
+# Deploy
+deployctl deploy --project=your-project-name deno_deploy.ts
+```
+
+### Docker
+
+```dockerfile
+FROM denoland/deno:1.40.0
+
+WORKDIR /app
+COPY . .
+
+EXPOSE 3001
+
+CMD ["deno", "task", "start"]
+```
+
+## 🚀 Original Deployment Section
+
 ### Vercel Deployment (Recommended)
 
 The easiest way to deploy this API is using Vercel's serverless platform:

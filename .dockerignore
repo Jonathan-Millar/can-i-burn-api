@@ -1,0 +1,11 @@
+node_modules/
+dist/
+coverage/
+.git/
+.env
+*.log
+README.md
+MIGRATION_TO_DENO.md
+DENO_MIGRATION_COMPLETE.md
+deploy_instructions.md
+deploy_deno.md
