@@ -27,6 +27,7 @@ A modern REST API for fire restriction and burn status information, providing re
 
 - [Installation](#installation)
 - [Quick Start](#quick-start)
+- [API Documentation](#api-documentation)
 - [API Endpoints](#api-endpoints)
 - [Environment Variables](#environment-variables)
 - [Development](#development)
@@ -39,22 +40,28 @@ A modern REST API for fire restriction and burn status information, providing re
 
 ### Prerequisites
 
-- Node.js (v18 or higher)
-- npm or yarn
+- Deno (v1.40 or higher)
 - TypeScript knowledge (recommended)
 
-### Clone and Install
+**Install Deno:**
+```bash
+# macOS/Linux
+curl -fsSL https://deno.land/install.sh | sh
+
+# Windows (PowerShell)
+irm https://deno.land/install.ps1 | iex
+```
+
+### Clone and Setup
 
 ```bash
 # Clone the repository
 git clone <repository-url>
 cd can-i-burn-api
 
-# Install dependencies
-npm install
-
-# Build the project
-npm run build
+# No installation needed - Deno manages dependencies automatically!
+# Just run type checking to verify everything is working
+deno check src/main.ts
 ```
 
 ## 🚀 Quick Start
@@ -63,7 +70,7 @@ npm run build
 
 ```bash
 # Start development server with hot reload
-npm run dev
+deno task dev
 ```
 
 The API will be available at `http://localhost:3001`
@@ -71,9 +78,26 @@ The API will be available at `http://localhost:3001`
 ### Production Mode
 
 ```bash
-# Build and start production server
-npm run build
-npm start
+# Start production server (no build step needed!)
+deno task start
+```
+
+## 📘 API Documentation
+
+Interactive docs and the OpenAPI schema are available without additional dependencies.
+
+- Swagger UI: GET /docs
+- OpenAPI JSON: GET /openapi.json
+
+Notes and best practices implemented:
+- Cache disabled for schema responses via Cache-Control: no-store, no-cache, must-revalidate
+- Search engine indexing disabled for docs and schema via X-Robots-Tag: noindex
+- Swagger UI served via a pinned CDN (swagger-ui-dist@5) with Try it out enabled
+- All API paths are rooted under /api; server entries reflect local and root deployments
+
+Example:
+```bash
+curl http://localhost:3001/openapi.json
 ```
 
 ## 📡 API Endpoints
@@ -209,28 +233,25 @@ LOCATIONIQ_API_KEY=your_locationiq_api_key_here
 
 ```bash
 # Development with hot reload
-npm run dev
-
-# Build TypeScript to JavaScript
-npm run build
+deno task dev
 
 # Start production server
-npm start
+deno task start
 
 # Run tests
-npm test
+deno task test
 
 # Run tests with coverage
-npm run test:coverage
+deno task test:coverage
 
 # Lint code
-npm run lint
+deno task lint
 
-# Fix linting issues
-npm run lint:fix
+# Format code
+deno task fmt
 
-# Type checking without build
-npm run typecheck
+# Type checking
+deno task check
 ```
 
 ### Project Structure
@@ -238,28 +259,36 @@ npm run typecheck
 ```
 can-i-burn-api/
 ├── src/
-│   ├── index.ts              # Application entry point
+│   ├── main.ts               # Application entry point (Deno/Oak)
 │   ├── middleware/
-│   │   └── errorHandler.ts   # Global error handling
-│   └── routes/
-│       ├── fireWatch.ts      # Fire watch endpoints
-│       ├── geocoding.ts      # Geocoding endpoints
-│       └── health.ts         # Health check endpoint
-├── dist/                     # Compiled JavaScript (generated)
+│   │   ├── errorHandler.ts   # Global error handling
+│   │   └── security.ts       # Security headers middleware
+│   ├── routes/
+│   │   ├── fireWatch.ts      # Fire watch endpoints
+│   │   ├── geocoding.ts      # Geocoding endpoints
+│   │   └── health.ts         # Health check endpoint
+│   ├── services/
+│   │   └── nbdnrService.ts   # NBDNR ArcGIS integration
+│   ├── types/
+│   │   └── nbdnr.ts          # TypeScript type definitions
+│   └── docs/
+│       └── openapi.ts        # API documentation
+├── api/
+│   └── index.ts              # Vercel serverless entry point
 ├── coverage/                 # Test coverage reports (generated)
-├── package.json
-├── tsconfig.json
-├── eslint.config.js
+├── deno.json                 # Deno configuration and tasks
+├── deno.lock                 # Deno dependency lock file
+├── build_deno.sh            # Deno build script
 └── README.md
 ```
 
 ### Code Quality
 
-- **TypeScript**: Strict mode enabled with comprehensive type checking
-- **ESLint**: Code linting with TypeScript-specific rules
-- **Prettier**: Code formatting (configure as needed)
-- **Helmet**: Security headers middleware
-- **CORS**: Cross-origin resource sharing enabled
+- **TypeScript**: Native Deno TypeScript support with strict mode
+- **Deno Lint**: Built-in linting with TypeScript-specific rules
+- **Deno Fmt**: Built-in code formatting
+- **Security Headers**: Custom security middleware (replaces Helmet)
+- **CORS**: Cross-origin resource sharing via Oak CORS middleware
 
 ## 🧪 Testing
 
@@ -267,13 +296,13 @@ can-i-burn-api/
 
 ```bash
 # Run all tests
-npm test
+deno task test
 
 # Run tests with coverage report
-npm run test:coverage
+deno task test:coverage
 
 # Run tests in watch mode
-npm test -- --watch
+deno task test:watch
 ```
 
 ### Test Coverage
@@ -283,22 +312,20 @@ Current test coverage status:
 > **Note**: Test files are not yet implemented. The project is configured with Vitest for testing. To add tests, create files with `.test.ts` or `.spec.ts` extensions in the `src/` directory or a dedicated `tests/` folder.
 
 **Testing Framework:**
-- **Vitest**: Fast unit testing framework
-- **Coverage**: V8 coverage provider
-- **TypeScript**: Full TypeScript support in tests
+- **Deno Test**: Built-in testing framework with native TypeScript support
+- **Coverage**: Built-in V8 coverage provider
+- **TypeScript**: Native TypeScript support in tests
 
 ### Adding Tests
 
 Example test structure:
 
 ```typescript
-// src/routes/__tests__/health.test.ts
-import { describe, it, expect } from 'vitest';
-import request from 'supertest';
-import app from '../../index';
+// src/main_test.ts
+import { assertEquals, assertExists } from '@std/assert';
 
-describe('Health Endpoint', () => {
-  it('should return health status', async () => {
+Deno.test('Health Endpoint', async () => {
+  // Test implementation here
     const response = await request(app)
       .get('/api/health')
       .expect(200);
@@ -412,8 +439,8 @@ The `/api/health` endpoint can be used for:
 This project is licensed under the ISC License - see the [LICENSE](LICENSE) file for details.
 
 ## 🔗 Related Projects
+- **NBDNR Service**: New Brunswick Department of Natural Resources fire data service
 
-- **can-i-burn-service**: Core fire watch logic service (local dependency)
 
 ## 📞 Support
 

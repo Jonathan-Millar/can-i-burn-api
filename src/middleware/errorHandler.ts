@@ -1,33 +1,41 @@
-import { Request, Response, NextFunction } from 'express';
+import { Context, Next, isHttpError, Status } from '@oak/oak';
 
 interface ErrorWithStatus extends Error {
   status?: number;
 }
 
-export function errorHandler(
-  error: ErrorWithStatus,
-  req: Request,
-  res: Response,
-  _next: NextFunction // eslint-disable-line @typescript-eslint/no-unused-vars
-): void {
-  console.error('API Error:', {
-    message: error.message,
-    stack: error.stack,
-    url: req.url,
-    method: req.method,
-    body: req.body,
-    query: req.query
-  });
+export async function errorHandler(ctx: Context, next: Next) {
+  try {
+    await next();
+  } catch (error) {
+    let status = Status.InternalServerError;
+    let message = 'Internal server error';
 
-  const status = error.status || 500;
-  const message = error.message || 'Internal server error';
+    if (isHttpError(error)) {
+      status = error.status;
+      message = error.message;
+    } else if (error instanceof Error) {
+      const errorWithStatus = error as ErrorWithStatus;
+      status = errorWithStatus.status || Status.InternalServerError;
+      message = error.message || 'Internal server error';
+    }
 
-  res.status(status).json({
-    error: 'Request failed',
-    message,
-    ...(process.env.NODE_ENV === 'development' && {
-      stack: error.stack,
-      details: error.message
-    })
-  });
+    console.error('API Error:', {
+      message: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+      url: ctx.request.url.pathname + ctx.request.url.search,
+      method: ctx.request.method,
+      body: null, // Body logging simplified for Deno
+    });
+
+    ctx.response.status = status;
+    ctx.response.body = {
+      error: 'Request failed',
+      message,
+      ...(Deno.env.get('NODE_ENV') === 'development' && {
+        stack: error instanceof Error ? error.stack : undefined,
+        details: error instanceof Error ? error.message : String(error)
+      })
+    };
+  }
 }

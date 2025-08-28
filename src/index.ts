@@ -5,6 +5,7 @@ import { fireWatchRouter } from './routes/fireWatch';
 import { healthRouter } from './routes/health';
 import { geocodingRouter } from './routes/geocoding';
 import { errorHandler } from './middleware/errorHandler';
+import { registerDocs } from './docs/openapi';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -16,6 +17,8 @@ app.use(express.json());
 app.use('/api', healthRouter);
 app.use('/api', fireWatchRouter);
 app.use('/api', geocodingRouter);
+
+registerDocs(app);
 
 app.use(errorHandler);
 

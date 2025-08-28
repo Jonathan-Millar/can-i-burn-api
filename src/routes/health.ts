@@ -1,13 +1,13 @@
-import { Router, Request, Response } from 'express';
+import { Router } from '@oak/oak';
 
-const router = Router();
+const router = new Router();
 
-router.get('/health', (_req: Request, res: Response) => {
-  res.json({
+router.get('/api/health', (ctx) => {
+  ctx.response.body = {
     status: 'ok',
     timestamp: new Date().toISOString(),
     service: 'can-i-burn-api'
-  });
+  };
 });
 
 export { router as healthRouter };

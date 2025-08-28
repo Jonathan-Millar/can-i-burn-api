@@ -1,0 +1,41 @@
+{
+  "version": "1.0.0",
+  "name": "can-i-burn-api",
+  "description": "REST API for fire restriction and burn status information",
+  "tasks": {
+    "dev": "deno run --allow-net --allow-read --allow-env --watch src/main.ts",
+    "start": "deno run --allow-net --allow-read --allow-env src/main.ts",
+    "test": "deno test --allow-net --allow-read --allow-env",
+    "test:watch": "deno test --allow-net --allow-read --allow-env --watch",
+    "test:coverage": "deno test --allow-net --allow-read --allow-env --coverage=coverage/",
+    "lint": "deno lint src/",
+    "fmt": "deno fmt src/",
+    "check": "deno check src/main.ts"
+  },
+  "imports": {
+    "@oak/oak": "https://deno.land/x/oak@v13.2.5/mod.ts",
+    "@oak/cors": "https://deno.land/x/cors@v1.2.2/mod.ts",
+    "@std/assert": "https://deno.land/std@0.215.0/assert/mod.ts",
+    "@std/http": "https://deno.land/std@0.215.0/http/mod.ts",
+    "@std/path": "https://deno.land/std@0.215.0/path/mod.ts",
+    "@std/media-types": "https://deno.land/std@0.215.0/media_types/mod.ts",
+    "@std/testing": "https://deno.land/std@0.215.0/testing/mod.ts"
+  },
+  "compilerOptions": {
+    "lib": ["deno.window", "dom", "dom.asynciterable"],
+    "strict": true
+  },
+  "fmt": {
+    "useTabs": false,
+    "lineWidth": 100,
+    "indentWidth": 2,
+    "semiColons": true,
+    "singleQuote": true,
+    "proseWrap": "preserve"
+  },
+  "lint": {
+    "rules": {
+      "tags": ["recommended"]
+    }
+  }
+}
