@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a REST API for fire restriction and burn status information, built with Deno and Oak framework using TypeScript. The API integrates with the New Brunswick Department of Natural Resources (NBDNR) ArcGIS service to provide real-time fire watch status queries.
+This is a REST API for fire restriction and burn status information, built with Deno and Hono framework using TypeScript. The API integrates with the New Brunswick Department of Natural Resources (NBDNR) ArcGIS service to provide real-time fire watch status queries.
 
 ## Development Commands
 
@@ -19,15 +19,12 @@ This is a REST API for fire restriction and burn status information, built with 
 ## Architecture
 
 ### Core Structure
-- **Entry Point**: `src/main.ts` - Oak app setup with security middleware and CORS
-- **Routes**: Located in `src/routes/`
-  - `fireWatch.ts` - Main API endpoint for fire watch status queries
-  - `health.ts` - Health check endpoint
-  - `geocoding.ts` - Geocoding endpoint for location resolution
+- **Entry Point**: `src/main.ts` - Hono app with all routes, middleware, and documentation
 - **Middleware**: 
-  - `src/middleware/errorHandler.ts` - Centralized error handling
-  - `src/middleware/security.ts` - Security headers (replaces helmet)
+  - `src/middleware/errorHandler.ts` - Centralized error handling for Hono
+  - `src/middleware/security.ts` - Security headers middleware for Hono
 - **Services**: `src/services/nbdnrService.ts` - NBDNR ArcGIS integration
+- **Tests**: `src/main_test.ts` - Comprehensive test suite for all endpoints
 
 ### API Endpoints
 - `GET /api/health` - Health check endpoint
