@@ -192,6 +192,31 @@
   "workspace": {
     "dependencies": [
       "jsr:@hono/hono@^4.6.14"
-    ]
+    ],
+    "packageJson": {
+      "dependencies": [
+        "npm:@types/cors@^2.8.17",
+        "npm:@types/express@5",
+        "npm:@types/node-geocoder@^4.2.6",
+        "npm:@types/node@^24.1.0",
+        "npm:@types/supertest@^6.0.3",
+        "npm:@typescript-eslint/eslint-plugin@^8.38.0",
+        "npm:@typescript-eslint/parser@^8.38.0",
+        "npm:@vitest/coverage-v8@^3.2.4",
+        "npm:cors@^2.8.5",
+        "npm:eslint@^9.32.0",
+        "npm:express@^4.19.2",
+        "npm:helmet@^7.1.0",
+        "npm:husky@^9.1.7",
+        "npm:node-geocoder@^4.4.1",
+        "npm:prettier@^3.6.2",
+        "npm:supertest@^7.1.4",
+        "npm:swagger-ui-dist@^5.27.1",
+        "npm:tsx@^4.19.2",
+        "npm:typescript@^5.8.3",
+        "npm:vercel-deno-runtime@*",
+        "npm:vitest@^3.2.4"
+      ]
+    }
   }
 }
